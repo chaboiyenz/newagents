@@ -1,0 +1,414 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Manage Projects{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8 px-4">
+    <div class="bg-white shadow-lg rounded-2xl p-6">
+        <h2 class="text-xl font-bold mb-4 text-gray-800">Add New Subdivision</h2>
+
+        <!-- Display success or error messages -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'success' %}bg-green-50 text-green-600{% else %}bg-red-50 text-red-600{% endif %} p-3 rounded-lg text-base">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="subdivision-form" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- City with Add New City Button -->
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block text-base font-medium text-gray-700">City</label>
+                    <button type="button" id="show-city-modal" class="text-blue-600 hover:text-blue-800 text-base font-medium hover:underline">
+                        + Add New City
+                    </button>
+                </div>
+                <div class="flex gap-2">
+                    {{ form.city|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                </div>
+                {% if form.city.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in form.city.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Name -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Subdivision Name</label>
+                    {{ form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.name.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Commission Field -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Commission (%)</label>
+                    {{ form.commission|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.commission.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.commission.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Developer and Construction Status -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Developer -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Developer</label>
+                    {{ form.developer|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.developer.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.developer.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Construction Status -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Construction Status</label>
+                    {{ form.construction_status|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.construction_status.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.construction_status.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        
+            <!-- Description -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">Description</label>
+                {{ form.description|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if form.description.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in form.description.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Location -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">Location Details</label>
+                {{ form.location|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if form.location.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in form.location.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- House Model -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">House Model</label>
+                {{ form.house_model|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if form.house_model.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in form.house_model.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Prices -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Minimum Price (₱)</label>
+                    {{ form.price_min|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.price_min.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.price_min.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Maximum Price (₱)</label>
+                    {{ form.price_max|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.price_max.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.price_max.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Messenger Link -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Messenger Link <span class="text-gray-500">(Optional)</span></label>
+                    {{ form.messenger_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.messenger_link.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.messenger_link.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Google Drive Link -->
+                <div>
+                    <label class="block text-base font-medium text-gray-700 mb-1">Google Drive Link <span class="text-gray-500">(Optional)</span></label>
+                    {{ form.google_drive_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                    {% if form.google_drive_link.errors %}
+                        <div class="text-red-500 text-sm mt-1">
+                            {% for error in form.google_drive_link.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Priority -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">Priority</label>
+                {{ form.priority|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if form.priority.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in form.priority.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Images Section -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-medium text-gray-800">Property Images</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Image 1 -->
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 1 <span class="text-gray-500">(Optional)</span></label>
+                        {{ form.image1 }}
+                        {% if form.image1.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.image1.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image 2 -->
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 2 <span class="text-gray-500">(Optional)</span></label>
+                        {{ form.image2 }}
+                        {% if form.image2.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.image2.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image 3 -->
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 3 <span class="text-gray-500">(Optional)</span></label>
+                        {{ form.image3 }}
+                        {% if form.image3.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.image3.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image 4 -->
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 4 <span class="text-gray-500">(Optional)</span></label>
+                        {{ form.image4 }}
+                        {% if form.image4.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.image4.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 text-red-600 p-3 rounded-lg text-base">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl text-base font-medium transition duration-200">
+                Add Subdivision
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- City Modal -->
+<div id="city-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full m-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-gray-800">Add New City</h3>
+            <button type="button" class="close-modal text-gray-500 hover:text-gray-700">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'addcity' %}" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Province Selection with Add New Button -->
+            <div>
+                <div class="flex justify-between items-center mb-1">
+                    <label class="block text-base font-medium text-gray-700">Province</label>
+                    <button type="button" id="show-province-modal" class="text-blue-600 hover:text-blue-800 text-base font-medium hover:underline">
+                        + Add New Province
+                    </button>
+                </div>
+                {{ city_form.province|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if city_form.province.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in city_form.province.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- City Name -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">City Name</label>
+                {{ city_form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if city_form.name.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in city_form.name.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex space-x-3">
+                <button type="button" class="close-modal w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-xl text-base font-medium transition duration-200">
+                    Cancel
+                </button>
+                <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-xl text-base font-medium transition duration-200">
+                    Add City
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Province Modal -->
+<div id="province-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full m-4">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-gray-800">Add New Province</h3>
+            <button type="button" class="close-modal text-gray-500 hover:text-gray-700">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <form method="post" action="{% url 'addprovince' %}" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Province Name -->
+            <div>
+                <label class="block text-base font-medium text-gray-700 mb-1">Province Name</label>
+                {{ province_form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                {% if province_form.name.errors %}
+                    <div class="text-red-500 text-sm mt-1">
+                        {% for error in province_form.name.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex space-x-3">
+                <button type="button" class="close-modal w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-xl text-base font-medium transition duration-200">
+                    Cancel
+                </button>
+                <button type="submit" class="w-1/2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-xl text-base font-medium transition duration-200">
+                    Add Province
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript for Modal Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // City Modal
+        const cityModal = document.getElementById('city-modal');
+        const showCityModalBtn = document.getElementById('show-city-modal');
+        
+        showCityModalBtn.addEventListener('click', function() {
+            cityModal.classList.remove('hidden');
+        });
+        
+        // Province Modal
+        const provinceModal = document.getElementById('province-modal');
+        const showProvinceModalBtn = document.getElementById('show-province-modal');
+        
+        showProvinceModalBtn.addEventListener('click', function() {
+            provinceModal.classList.remove('hidden');
+            cityModal.classList.add('hidden'); // Hide city modal when province modal is shown
+        });
+        
+        // Close Modals
+        document.querySelectorAll('.close-modal').forEach(button => {
+            button.addEventListener('click', function() {
+                cityModal.classList.add('hidden');
+                provinceModal.classList.add('hidden');
+            });
+        });
+    });
+</script>
+{% endblock %}

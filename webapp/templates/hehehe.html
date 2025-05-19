@@ -1,0 +1,273 @@
+{% extends 'index.html' %}
+
+{% block title %} Project Listings {% endblock %}
+
+{% block content %}
+<div class="w-[70%] mx-auto px-6 py-12">
+  <h2 class="text-4xl font-bold text-gray-800 mb-10">Inner SPARC Projects</h2>
+
+  <div class="space-y-10">
+    <!-- All inner content (filters, preview, results) remains unchanged -->
+
+
+  <div class="space-y-8">
+    <!-- Filter Section -->
+    <div class="bg-white rounded-2xl shadow p-8 border border-gray-200 transition duration-300">
+      <h3 class="text-2xl font-semibold text-gray-700 mb-6">Find Your Property</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Province Dropdown -->
+        <div>
+          <label for="province-dropdown" class="block text-base font-medium text-gray-700 mb-2">Province</label>
+          <select id="province-dropdown" class="w-full px-4 py-3 text-lg bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition" onchange="updateCities()">
+            <option value="">Select a Province</option>
+            {% for province in provinces %}
+              <option value="{{ province.id }}">{{ province.name }}</option>
+            {% empty %}
+              <option disabled>No provinces available</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- City Dropdown -->
+        <div>
+          <label for="city-dropdown" class="block text-base font-medium text-gray-700 mb-2">City</label>
+          <select id="city-dropdown" class="w-full px-4 py-3 text-lg bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition" onchange="updateSubdivisions()">
+            <option value="">Select a City</option>
+          </select>
+        </div>
+
+        <!-- Subdivision Dropdown -->
+        <div>
+          <label for="subdivision-dropdown" class="block text-base font-medium text-gray-700 mb-2">Subdivision</label>
+          <select id="subdivision-dropdown" class="w-full px-4 py-3 text-lg bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+            <option value="">Select a Subdivision</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+<!-- Subdivision Preview -->
+<div id="subdivision-preview" class="hidden mt-10 bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 transition-all duration-300 ease-in-out w-full">
+  <div class="flex flex-col md:flex-row">
+    
+<!-- Image Section -->
+<div class="md:w-1/2 bg-gray-100">
+  <div class="w-full h-[450px] overflow-hidden">
+    <img
+      id="subdivision-image"
+      src=""
+      alt="Subdivision"
+      class="w-full h-full object-cover object-center md:rounded-l-2xl"
+    >
+  </div>
+</div>
+
+
+
+
+
+    <!-- Content Section -->
+    <div class="md:w-1/2 p-10">
+      <h3 id="subdivision-name" class="text-5xl font-extrabold text-gray-800 mb-6"></h3>
+
+      <div class="mb-4">
+        <span class="inline-block px-6 py-3 bg-blue-100 text-blue-800 text-2xl font-semibold rounded-full">
+          <span id="subdivision-price"></span>
+        </span>
+      </div>
+
+      <div class="mb-6">
+        <p id="subdivision-description" class="text-gray-700 text-xl leading-relaxed"></p>
+      </div>
+
+      <div id="messenger-link-container">
+        <a id="messenger-link" href="#" target="_blank" class="inline-flex items-center px-8 py-4 bg-blue-600 text-white text-xl rounded-xl hover:bg-blue-700 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+          </svg>
+          Contact via Messenger
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Results Section -->
+    <div class="mt-10">
+    
+      <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Dynamically populated project cards -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function updateCities() {
+    const provinceId = document.getElementById('province-dropdown').value;
+    const cityDropdown = document.getElementById('city-dropdown');
+
+    cityDropdown.innerHTML = '<option value="">Select a City</option>';
+
+    if (provinceId) {
+      fetch(`/api/cities/${provinceId}/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.cities.length > 0) {
+            data.cities.forEach(city => {
+              const option = document.createElement('option');
+              option.value = city.id;
+              option.textContent = city.name;
+              cityDropdown.appendChild(option);
+            });
+          } else {
+            cityDropdown.innerHTML = '<option disabled>No cities available</option>';
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          cityDropdown.innerHTML = '<option disabled>Error fetching cities</option>';
+        });
+    }
+  }
+
+  function updateSubdivisions() {
+    const cityId = document.getElementById('city-dropdown').value;
+    const subdivisionDropdown = document.getElementById('subdivision-dropdown');
+    const projectsContainer = document.getElementById('projects-container');
+    const subdivisionPreview = document.getElementById('subdivision-preview');
+
+    subdivisionDropdown.innerHTML = '<option value="">Select a Subdivision</option>';
+    projectsContainer.innerHTML = '';
+    subdivisionPreview.classList.add('hidden');
+
+    if (cityId) {
+      fetch(`/api/subdivisions/${cityId}/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.subdivisions.length > 0) {
+            data.subdivisions.forEach(subdivision => {
+              const option = document.createElement('option');
+              option.value = subdivision.id;
+              option.textContent = subdivision.name;
+              option.dataset.image = subdivision.image || '';
+              option.dataset.description = subdivision.description || 'No description available';
+              option.dataset.priceRange = subdivision.price_range_display || '';
+              option.dataset.messengerLink = subdivision.messenger_link || '';
+              subdivisionDropdown.appendChild(option);
+            });
+          } else {
+            subdivisionDropdown.innerHTML = '<option disabled>No subdivisions available</option>';
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching subdivisions:', err);
+          subdivisionDropdown.innerHTML = '<option disabled>Error fetching subdivisions</option>';
+        });
+    }
+  }
+
+  document.getElementById('subdivision-dropdown').addEventListener('change', function () {
+    const subdivisionId = this.value;
+    const selectedOption = this.options[this.selectedIndex];
+    const subdivisionPreview = document.getElementById('subdivision-preview');
+    const projectsContainer = document.getElementById('projects-container');
+
+    projectsContainer.innerHTML = '';
+
+    if (subdivisionId) {
+      // Subdivision preview
+      document.getElementById('subdivision-name').textContent = selectedOption.text;
+      document.getElementById('subdivision-description').textContent = selectedOption.dataset.description;
+      document.getElementById('subdivision-price').textContent = selectedOption.dataset.priceRange;
+      document.getElementById('subdivision-image').src = selectedOption.dataset.image || '/media/subdivisions/default.jpg';
+      document.getElementById('subdivision-image').alt = selectedOption.text;
+
+      const messengerLink = document.getElementById('messenger-link');
+      const messengerContainer = document.getElementById('messenger-link-container');
+
+      if (selectedOption.dataset.messengerLink) {
+        messengerLink.href = selectedOption.dataset.messengerLink;
+        messengerContainer.classList.remove('hidden');
+      } else {
+        messengerContainer.classList.add('hidden');
+      }
+
+      subdivisionPreview.classList.remove('hidden');
+
+      // Primary projects for selected subdivision
+      fetch(`/api/property/${subdivisionId}/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.projects && data.projects.length > 0) {
+            data.projects.forEach(project => {
+              const projectDiv = document.createElement('div');
+              projectDiv.className = 'bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden transition-shadow hover:shadow-md';
+
+              projectDiv.innerHTML = `
+                <div class="h-40 bg-gray-100 flex items-center justify-center">
+                  ${project.image ? 
+                    `<img src="${project.image.url}" alt="${project.name}" class="w-full h-full object-cover">` : 
+                    `<div class="text-gray-400 text-sm">No image available</div>`
+                  }
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold text-gray-800">${project.name}</h3>
+                  <p class="text-sm text-gray-600 mt-1 line-clamp-2">${project.description || 'No description available'}</p>
+                  <div class="mt-3 flex justify-between items-center">
+                    <span class="text-blue-600 font-medium">${project.price_range || '₱0'}</span>
+                    <a href="/project/${project.id}/" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1 rounded-md transition">View Details</a>
+                  </div>
+                </div>
+              `;
+              projectsContainer.appendChild(projectDiv);
+            });
+          } else {
+            projectsContainer.innerHTML = '<p class="text-sm text-gray-500">No projects found for this subdivision.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching projects:', error);
+          projectsContainer.innerHTML = '<p class="text-sm text-red-500">Error loading projects.</p>';
+        });
+
+      // Other projects from the same city
+      fetch(`/api/projects/by-city/${subdivisionId}/`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.projects && data.projects.length > 0) {
+            data.projects.forEach(project => {
+              const projectDiv = document.createElement('div');
+              projectDiv.className = 'bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden transition-shadow hover:shadow-md';
+
+              projectDiv.innerHTML = `
+                <div class="h-40 bg-gray-100 flex items-center justify-center">
+                  ${project.image ? 
+                    `<img src="${project.image}" alt="${project.name}" class="w-full h-full object-cover">` : 
+                    `<div class="text-gray-400 text-sm">No image available</div>`
+                  }
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold text-gray-800">${project.name}</h3>
+                  <p class="text-sm text-gray-600 mt-1 line-clamp-2">${project.description || 'No description available'}</p>
+                  <div class="mt-3 flex justify-between items-center">
+                    <span class="text-blue-600 font-medium">${project.price_range || '₱0'}</span>
+                    <a href="/project/${project.id}/" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1 rounded-md transition">View Details</a>
+                  </div>
+                </div>
+              `;
+              projectsContainer.appendChild(projectDiv);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching city projects:', error);
+        });
+    }
+  });
+</script>
+
+{% endblock %}

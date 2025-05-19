@@ -1,0 +1,262 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Inner SPARC Realty Corporation{% endblock %}</title>
+
+  <!-- TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    /* Base styles */
+    body {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Custom Styles */
+    .nav-blur {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .navbar-item {
+      position: relative;
+      transition: all 0.3s ease;
+      padding: 0.75rem 1.25rem;
+      color: #fff;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .navbar-item::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background-color: #fff;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .navbar-item:hover {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .navbar-item:hover::after {
+      width: 80%;
+    }
+
+    .navbar-item.active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .navbar-item.active::after {
+      width: 80%;
+    }
+
+    .mobile-menu {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .mobile-menu.show {
+      transform: translateX(0);
+    }
+
+    /* Logo animation */
+    .logo-text {
+      background: linear-gradient(to right, #ffffff, #e2e8f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: all 0.3s ease;
+      font-size: 2.25rem;
+    }
+
+    .logo-text:hover {
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      letter-spacing: 0.5px;
+    }
+
+    /* Button styles */
+    .nav-button {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Content styles */
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 2rem;
+      line-height: 1.3;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 1.75rem;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    p, li, td, th {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .btn, button {
+      font-size: 1.1rem;
+      padding: 0.75rem 1.5rem;
+    }
+
+    /* Increase container max-width for larger screens */
+    @media (min-width: 1280px) {
+      .container {
+        max-width: 1280px;
+      }
+    }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+  <!-- Modern Navbar with Blur Effect -->
+  <nav class="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="navbar">
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 nav-blur">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+          <!-- Logo Section -->
+                      <div class="flex items-center space-x-3">
+              <img src="{% static 'media/logo.png' %}" class="h-8 w-8" alt="Inner SPARC Realty Logo">
+              <span class="text-1xl font-bold logo-text">Inner SPARC Realty</span>
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center space-x-1">
+            {% if not user.is_authenticated %}
+              <a href="{% url 'agentsignup' %}" class="navbar-item">Sign Up</a>
+              <a href="{% url 'agentsignin' %}" class="nav-button px-4 py-2 rounded-lg text-white hover:text-white ml-2">Sign In</a>
+            {% else %}
+              <a href="{% url 'projectlisting_page' %}" class="navbar-item">Projects</a>
+              <a href="{% url 'memo_combined' %}" class="navbar-item">Memo</a>
+              {% if user.is_superuser %}
+                <a href="{% url 'approve_users' %}" class="navbar-item">Approve Users</a>
+                <a href="{% url 'viewproperties' %}" class="navbar-item">View Properties</a>
+                <a href="{% url 'addproperty' %}" class="navbar-item">Add Properties</a>
+              {% endif %}
+              <a href="{% url 'signout' %}" class="nav-button px-4 py-2 rounded-lg text-white hover:text-white ml-2">Sign Out</a>
+            {% endif %}
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="md:hidden mobile-menu fixed top-[72px] left-0 w-64 h-screen bg-gradient-to-b from-indigo-600 to-purple-600 nav-blur transform transition-transform duration-300 ease-in-out" id="mobile-menu">
+      <div class="px-4 py-6 space-y-4">
+        {% if not user.is_authenticated %}
+          <a href="{% url 'agentsignup' %}" class="block navbar-item">Sign Up</a>
+          <a href="{% url 'agentsignin' %}" class="block navbar-item">Sign In</a>
+        {% else %}
+          <a href="{% url 'projectlisting_page' %}" class="block navbar-item">Projects</a>
+          <a href="{% url 'memo_combined' %}" class="block navbar-item">Memo</a>
+          {% if user.is_superuser %}
+            <a href="{% url 'approve_users' %}" class="block navbar-item">Approve Users</a>
+            <a href="{% url 'viewproperties' %}" class="block navbar-item">View Properties</a>
+            <a href="{% url 'addproperty' %}" class="block navbar-item">Add Properties</a>
+          {% endif %}
+          <a href="{% url 'signout' %}" class="block navbar-item">Sign Out</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="pt-20">
+    <main class="flex-1 p-6 md:p-8">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 text-center text-sm py-4 text-gray-500">
+      &copy; 2025 Inner SPARC Realty Corporation. All rights reserved.
+    </footer>
+  </div>
+
+  <!-- jQuery (required for AJAX in memo.html) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JavaScript for Navbar -->
+  <script>
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('show');
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll <= 0) {
+        navbar.style.boxShadow = 'none';
+      } else {
+        navbar.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // Add active class to current page link
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.navbar-item');
+      
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

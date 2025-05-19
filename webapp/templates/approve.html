@@ -1,0 +1,296 @@
+{% extends 'index.html' %}
+
+{% block title %}Approve Users{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 min-h-screen py-12">
+  <div class="container mx-auto px-4 max-w-7xl">
+    <!-- Page Header -->
+    <div class="mb-10">
+      <h1 class="text-5xl font-bold text-gray-900 mb-2">User Management</h1>
+      <p class="text-gray-600 text-xl">Manage user roles and approve registrations</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="mb-8">
+          <div class="rounded-lg bg-green-50 p-6 border border-green-100 shadow-sm">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-8 w-8 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-xl font-medium text-green-800">{{ message }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Search and Filter Section -->
+    <div class="mb-8 bg-white rounded-xl shadow-sm p-6">
+      <div class="flex flex-col space-y-6">
+        <!-- Search Bar -->
+        <div class="flex-1">
+          <div class="relative">
+            <input type="text" 
+                   id="searchInput" 
+                   placeholder="Search by name, email, or username..." 
+                   class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                   onkeyup="filterUsers()">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <!-- Role Filter -->
+          <div class="flex-1">
+            <label class="block text-base font-medium text-gray-700 mb-2">Role Filter</label>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" 
+                      onclick="toggleFilter(this, 'role', 'all')"
+                      class="filter-btn role-filter active px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                All
+              </button>
+              <button type="button"
+                      onclick="toggleFilter(this, 'role', 'superuser')"
+                      class="filter-btn role-filter px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                Superuser
+              </button>
+              <button type="button"
+                      onclick="toggleFilter(this, 'role', 'staff')"
+                      class="filter-btn role-filter px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                Staff
+              </button>
+              <button type="button"
+                      onclick="toggleFilter(this, 'role', 'none')"
+                      class="filter-btn role-filter px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                None
+              </button>
+            </div>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="flex-1">
+            <label class="block text-base font-medium text-gray-700 mb-2">Status Filter</label>
+            <div class="flex flex-wrap gap-2">
+              <button type="button"
+                      onclick="toggleFilter(this, 'status', 'all')"
+                      class="filter-btn status-filter active px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                All
+              </button>
+              <button type="button"
+                      onclick="toggleFilter(this, 'status', 'approved')"
+                      class="filter-btn status-filter px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                Approved
+              </button>
+              <button type="button"
+                      onclick="toggleFilter(this, 'status', 'pending')"
+                      class="filter-btn status-filter px-4 py-2 rounded-lg text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                Pending
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Count and Approve All -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-gray-600 text-lg">
+            <span class="font-medium" id="userCount">{{ users|length }}</span> total users
+          </div>
+          {% if users %}
+            <form id="approveAllForm" method="POST" class="inline-block">
+              {% csrf_token %}
+              <input type="hidden" name="approve_all" value="true">
+              <button type="button" 
+                onclick="confirmApproveAll()"
+                class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow">
+                <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                Approve All Pending
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% if users %}
+        {% for profile in users %}
+          <div class="user-card bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+            <div class="p-6">
+              <!-- User Header -->
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 h-14 w-14 rounded-full bg-indigo-100 flex items-center justify-center">
+                  <span class="text-2xl font-medium text-indigo-600">
+                    {{ profile.user.first_name|first|upper }}{{ profile.user.last_name|first|upper }}
+                  </span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xl font-semibold text-gray-900 truncate">
+                    {{ profile.user.first_name }} {{ profile.user.last_name }}
+                  </p>
+                  <p class="text-base text-gray-500 truncate">@{{ profile.user.username }}</p>
+                  <p class="text-base text-gray-500 truncate">{{ profile.user.email }}</p>
+                </div>
+                <div>
+                  {% if profile.is_approved %}
+                    <span class="px-3 py-1 inline-flex text-base leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      Approved
+                    </span>
+                  {% else %}
+                    <span class="px-3 py-1 inline-flex text-base leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                      Pending
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Role Management -->
+              <div class="mt-6">
+                <form method="POST" class="space-y-4">
+                  {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+                  <input type="hidden" name="update_role" value="true">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-base font-medium text-gray-700">Role</label>
+                    <select name="role" onchange="this.form.submit()" 
+                            class="ml-3 block w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-lg">
+                      <option value="none" {% if not profile.user.is_staff and not profile.user.is_superuser %}selected{% endif %}>None</option>
+                      <option value="staff" {% if profile.user.is_staff and not profile.user.is_superuser %}selected{% endif %}>Staff</option>
+                      <option value="superuser" {% if profile.user.is_superuser %}selected{% endif %}>Superuser</option>
+                    </select>
+                  </div>
+                </form>
+
+                {% if not profile.is_approved %}
+                  <form method="POST" class="mt-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+                    <button type="submit" 
+                      class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                      <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                      Approve User
+                    </button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-span-full text-center px-6 py-16 bg-white rounded-xl shadow-sm">
+          <div class="rounded-full bg-blue-100 h-20 w-20 flex items-center justify-center mx-auto">
+            <svg class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="mt-6 text-2xl font-medium text-gray-900">No Users Found</h3>
+          <p class="mt-3 text-lg text-gray-500 max-w-md mx-auto">
+            There are no users in the system at the moment.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmApproveAll() {
+    if (confirm('Are you sure you want to approve all pending users?')) {
+        document.getElementById('approveAllForm').submit();
+    }
+}
+
+let activeFilters = {
+    role: 'all',
+    status: 'all'
+};
+
+function toggleFilter(button, filterType, value) {
+    // Remove active class from all buttons in the same filter group
+    document.querySelectorAll(`.${filterType}-filter`).forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-600', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-900');
+    });
+
+    // Add active class to clicked button
+    button.classList.remove('bg-gray-100', 'text-gray-900');
+    button.classList.add('active', 'bg-blue-600', 'text-white');
+
+    // Update active filters
+    activeFilters[filterType] = value;
+
+    // Reapply filters
+    filterUsers();
+}
+
+function filterUsers() {
+    const searchInput = document.getElementById('searchInput');
+    const filter = searchInput.value.toLowerCase();
+    const userCards = document.getElementsByClassName('user-card');
+    let visibleCount = 0;
+
+    Array.from(userCards).forEach(card => {
+        const userName = card.querySelector('.text-xl').textContent.toLowerCase();
+        const userEmail = card.querySelectorAll('.text-base')[1].textContent.toLowerCase();
+        const userUsername = card.querySelectorAll('.text-base')[0].textContent.toLowerCase();
+        
+        // Get role from select element
+        const roleSelect = card.querySelector('select[name="role"]');
+        const currentRole = roleSelect.value;
+        
+        // Get approval status
+        const isApproved = card.querySelector('.bg-green-100') !== null;
+        const approvalStatus = isApproved ? 'approved' : 'pending';
+
+        // Check if card matches all active filters
+        const matchesSearch = userName.includes(filter) || 
+                            userEmail.includes(filter) || 
+                            userUsername.includes(filter);
+        
+        const matchesRole = activeFilters.role === 'all' || 
+                           currentRole === activeFilters.role;
+        
+        const matchesStatus = activeFilters.status === 'all' || 
+                            (activeFilters.status === approvalStatus);
+
+        if (matchesSearch && matchesRole && matchesStatus) {
+            card.style.display = "";
+            visibleCount++;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    // Update the user count
+    document.getElementById('userCount').textContent = visibleCount;
+}
+
+// Add active class to filter buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Add styles for active filter buttons
+    const style = document.createElement('style');
+    style.textContent = `
+        .filter-btn.active {
+            background-color: rgb(37, 99, 235) !important;
+            color: white !important;
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}
