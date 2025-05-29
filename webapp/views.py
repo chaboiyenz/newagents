@@ -15,10 +15,14 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 from django.utils import timezone
 from django.db.models import Q
 from datetime import datetime
+import secrets
+import string
+import logging
+from django.db.models import Case, When, IntegerField
 
 
 def admin_check(user):
@@ -89,7 +93,11 @@ def subdivisions_by_price_range(request, city_id, price_range):
 
         # Apply price range filtering
         if max_price:
-            subdivisions = subdivisions.filter(price_max__gte=min_price, price_min__lte=max_price)
+            subdivisions = subdivisions.filter(
+                Q(price_min__gte=min_price, price_min__lte=max_price) |
+                Q(price_max__gte=min_price, price_max__lte=max_price) |
+                Q(price_min__lte=min_price, price_max__gte=max_price)
+            )
         else:
             subdivisions = subdivisions.filter(price_max__gte=min_price)
 
@@ -131,7 +139,8 @@ def search_subdivisions(request):
         subdivisions = Subdivision.objects.filter(
             Q(name__icontains=query) |
             Q(city__name__icontains=query) |
-            Q(city__province__name__icontains=query)
+            Q(city__province__name__icontains=query) |
+            Q(developer__icontains=query)
         ).select_related('city__province')
 
         data = []
@@ -246,9 +255,12 @@ def viewproperties(request):
     subdivisions = Subdivision.objects.all()
     
     if query:
-        subdivisions = subdivisions.filter(name__icontains=query) | \
-                        subdivisions.filter(city__name__icontains=query) | \
-                        subdivisions.filter(city__province__name__icontains=query)
+        subdivisions = subdivisions.filter(
+            Q(name__icontains=query) |
+            Q(city__name__icontains=query) |
+            Q(city__province__name__icontains=query) |
+            Q(developer__icontains=query)
+        )
     
     if price:
         if price == 'range1':  # Below 500,000
@@ -288,8 +300,15 @@ def addproperty(request):
     else:
         form = SubdivisionForm()
 
+    # Get all cities with their provinces for the edit functionality
+    cities = City.objects.select_related('province').all()
     city_form = CityForm()
     province_form = ProvinceForm()
+
+    # Add province information to city options
+    form.fields['city'].widget.attrs['data-province-id'] = ''
+    for city in cities:
+        form.fields['city'].widget.attrs[f'data-province-id-{city.id}'] = city.province.id
 
     return render(request, 'addproperty.html', {
         'form': form,
@@ -338,6 +357,37 @@ def add_province(request):
         'province_form': province_form,
         'city_form': city_form,
     })
+
+@login_required
+def edit_city(request):
+    if request.method == 'POST':
+        city_id = request.POST.get('city_id')
+        try:
+            city = City.objects.get(id=city_id)
+            city.name = request.POST.get('name')
+            city.province_id = request.POST.get('province')
+            city.save()
+            messages.success(request, f'City "{city.name}" updated successfully!')
+        except City.DoesNotExist:
+            messages.error(request, 'City not found.')
+        except Exception as e:
+            messages.error(request, f'Error updating city: {str(e)}')
+    return redirect('addproperty')
+
+@login_required
+def edit_province(request):
+    if request.method == 'POST':
+        province_id = request.POST.get('province_id')
+        try:
+            province = Province.objects.get(id=province_id)
+            province.name = request.POST.get('name')
+            province.save()
+            messages.success(request, f'Province "{province.name}" updated successfully!')
+        except Province.DoesNotExist:
+            messages.error(request, 'Province not found.')
+        except Exception as e:
+            messages.error(request, f'Error updating province: {str(e)}')
+    return redirect('addproperty')
 
 
 
@@ -775,7 +825,8 @@ def search_properties(request):
         subdivisions = subdivisions.filter(
             Q(name__icontains=query) |
             Q(city__name__icontains=query) |
-            Q(city__province__name__icontains=query)
+            Q(city__province__name__icontains=query) |
+            Q(developer__icontains=query)
         )
     
     if price:
@@ -811,6 +862,7 @@ def search_properties(request):
         data.append({
             'id': s.id,
             'name': s.name,
+            'developer': s.developer if s.developer else 'N/A',
             'province': s.city.province.name,
             'city': s.city.name,
             'price_min': s.price_min,
@@ -819,3 +871,160 @@ def search_properties(request):
         })
 
     return JsonResponse({'subdivisions': data})
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            # Generate a secure token
+            token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
+            
+            # Store the token in the database
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.reset_token = token
+            profile.reset_token_created = timezone.now()
+            profile.save()
+            
+            # Send email with reset link
+            reset_url = request.build_absolute_uri(f'/reset-password/{token}/')
+            subject = 'Password Reset Request - Inner SPARC Realty'
+            message = f"""Hi {user.first_name},
+
+We received a request to reset your password for your Inner SPARC Realty account.
+
+To reset your password, please click the link below:
+{reset_url}
+
+This link will expire in 24 hours.
+
+If you didn't request this password reset, you can safely ignore this email.
+
+Best regards,
+Inner SPARC Realty Corporation Support Team
+"""
+            try:
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'Password reset instructions have been sent to your email.')
+                return redirect('agentsignin')
+            except Exception as e:
+                # Log the error
+                logger = logging.getLogger('django.request')
+                logger.error(f"Failed to send password reset email: {str(e)}")
+                messages.error(request, 'Failed to send password reset email. Please try again later.')
+                return redirect('forgot_password')
+        except User.DoesNotExist:
+            messages.error(request, 'No account found with that email address.')
+    
+    return render(request, 'forgot_password.html')
+
+def reset_password(request, token):
+    try:
+        profile = Profile.objects.get(reset_token=token)
+        # Check if token is expired (24 hours)
+        if timezone.now() - profile.reset_token_created > timezone.timedelta(hours=24):
+            messages.error(request, 'Password reset link has expired. Please request a new one.')
+            return redirect('forgot_password')
+        
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            password2 = request.POST.get('password2')
+            
+            if password != password2:
+                messages.error(request, 'Passwords do not match.')
+                return render(request, 'reset_password.html')
+            
+            # Update password
+            user = profile.user
+            user.set_password(password)
+            user.save()
+            
+            # Clear reset token
+            profile.reset_token = None
+            profile.reset_token_created = None
+            profile.save()
+            
+            messages.success(request, 'Your password has been reset successfully. Please log in with your new password.')
+            return redirect('agentsignin')
+        
+        return render(request, 'reset_password.html')
+    except Profile.DoesNotExist:
+        messages.error(request, 'Invalid password reset link.')
+        return redirect('forgot_password')
+
+def get_subdivisions_by_province(request, province_id):
+    try:
+        # Get all subdivisions in the province through the city relationship
+        subdivisions = Subdivision.objects.filter(
+            city__province_id=province_id
+        ).select_related('city__province')
+        
+        # Sort subdivisions by priority (high -> medium -> low)
+        priority_order = {'high': 1, 'medium': 2, 'low': 3}
+        subdivisions = sorted(subdivisions, key=lambda x: priority_order.get(x.priority or 'low'))
+        
+        data = []
+        for sub in subdivisions:
+            data.append({
+                "id": sub.id,
+                "name": sub.name,
+                "description": sub.description or '',
+                "price_range_display": sub.price_range_display,
+                "priority": sub.priority or 'low',
+                "image1": sub.image1.url if sub.image1 else '',
+                "image2": sub.image2.url if sub.image2 else '',
+                "image3": sub.image3.url if sub.image3 else '',
+                "image4": sub.image4.url if sub.image4 else '',
+                "messenger_link": sub.messenger_link or '',
+                "google_drive_link": sub.google_drive_link or '',
+                "construction_status": sub.construction_status or '',
+                "developer": sub.developer or '',
+                "commission": float(sub.commission),
+                "city": sub.city.name,
+                "province": sub.city.province.name,
+                "location": sub.location or '',
+                "house_model": sub.house_model or ''
+            })
+        
+        return JsonResponse({"subdivisions": data})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+@require_http_methods(["GET"])
+def get_all_subdivisions(request):
+    try:
+        subdivisions = Subdivision.objects.all().order_by(
+            Case(
+                When(priority='high', then=0),
+                When(priority='medium', then=1),
+                When(priority='low', then=2),
+                default=3,
+                output_field=IntegerField(),
+            )
+        )
+        
+        data = {
+            'subdivisions': [{
+                'id': subdivision.id,
+                'name': subdivision.name,
+                'description': subdivision.description,
+                'price_range_display': subdivision.price_range_display,
+                'priority': subdivision.priority,   
+                'image1': subdivision.image1.url if subdivision.image1 else None,
+                'image2': subdivision.image2.url if subdivision.image2 else None,
+                'image3': subdivision.image3.url if subdivision.image3 else None,
+                'image4': subdivision.image4.url if subdivision.image4 else None,
+                'document': subdivision.document.url if subdivision.document else None,
+                'city': subdivision.city.name if subdivision.city else None,
+                'province': subdivision.city.province.name if subdivision.city and subdivision.city.province else None,
+            } for subdivision in subdivisions]
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

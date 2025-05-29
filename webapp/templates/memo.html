@@ -1,22 +1,22 @@
-{% extends 'INDEX.html' %}
+{% extends 'index.html' %}
 {% load widget_tweaks %}
 
 {% block content %}
 <div class="min-h-screen bg-gray-50 py-4">
-  <div class="container mx-auto px-4 max-w-[95%]">
+  <div class="container mx-auto px-4 sm:px-6 max-w-[95%]">
     <!-- Page Title -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-lg p-6 mb-6">
-      <h1 class="text-4xl font-bold text-white mb-1">Memo Management Dashboard</h1>
-      <p class="text-xl text-blue-100">Create and manage your memos efficiently</p>
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+      <h1 class="text-2xl sm:text-4xl font-bold text-white mb-1">Memo Management Dashboard</h1>
+      <p class="text-base sm:text-xl text-blue-100">Create and manage your memos efficiently</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
       <!-- Memo Submission Form -->
       {% if request.user.is_superuser %}
       <div class="lg:col-span-3">
         <div class="bg-white rounded-xl shadow-lg p-4 sticky top-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
-            <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 flex items-center">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
             Create New Memo
@@ -24,36 +24,36 @@
           <form method="post" enctype="multipart/form-data" id="memo-form" class="space-y-3">
             {% csrf_token %}
             <div class="space-y-1">
-              <label for="id_title" class="block text-lg font-medium text-gray-700">Title</label>
-              {{ form.title|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
+              <label for="id_title" class="block text-base sm:text-lg font-medium text-gray-700">Title</label>
+              {{ form.title|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-3 sm:px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
             </div>
             <div class="space-y-1">
-              <label for="id_description" class="block text-lg font-medium text-gray-700">Description</label>
-              {{ form.description|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
+              <label for="id_description" class="block text-base sm:text-lg font-medium text-gray-700">Description</label>
+              {{ form.description|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-3 sm:px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
             </div>
             <div class="space-y-1">
-              <label for="id_when" class="block text-lg font-medium text-gray-700">When</label>
-              {{ form.when|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
+              <label for="id_when" class="block text-base sm:text-lg font-medium text-gray-700">When</label>
+              {{ form.when|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-3 sm:px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
             </div>
             <div class="space-y-1">
-              <label for="id_where" class="block text-lg font-medium text-gray-700">Where (Optional)</label>
-              {{ form.where|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
+              <label for="id_where" class="block text-base sm:text-lg font-medium text-gray-700">Where (Optional)</label>
+              {{ form.where|add_class:"mt-1 block w-full rounded-lg border-2 border-gray-300 px-3 sm:px-4 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-150" }}
             </div>
             <div class="space-y-1">
-              <label for="id_file" class="block text-lg font-medium text-gray-700">Upload File</label>
-              <div class="mt-1 flex justify-center px-4 py-3 border-2 border-gray-300 border-dashed rounded-lg">
+              <label for="id_file" class="block text-base sm:text-lg font-medium text-gray-700">Upload File</label>
+              <div class="mt-1 flex justify-center px-3 sm:px-4 py-3 border-2 border-gray-300 border-dashed rounded-lg">
                 <div class="space-y-1 text-center">
-                  <svg class="mx-auto h-8 w-8 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                  <svg class="mx-auto h-6 w-6 sm:h-8 sm:w-8 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   {{ form.file|add_class:"sr-only" }}
-                  <div class="flex text-base text-gray-600 justify-center">
+                  <div class="flex text-sm sm:text-base text-gray-600 justify-center">
                     <label for="id_file" class="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                       <span>Upload a file</span>
                     </label>
                     <p class="pl-1">or drag and drop</p>
                   </div>
-                  <p class="text-base text-gray-500">PDF, DOC up to 10MB</p>
+                  <p class="text-sm sm:text-base text-gray-500">PDF, DOC up to 10MB</p>
                 </div>
               </div>
             </div>
@@ -73,19 +73,19 @@
       <!-- Memos List Section -->
       <div class="{% if request.user.is_superuser %}lg:col-span-9{% else %}lg:col-span-12{% endif %}">
         <!-- Filters -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
-            <svg class="w-7 h-7 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
             Filter Memos
           </h3>
-          <form method="get" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form method="get" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div class="space-y-1">
-              <label for="q" class="block text-lg font-medium text-gray-700">Search Title</label>
+              <label for="q" class="block text-base sm:text-lg font-medium text-gray-700">Search Title</label>
               <div class="mt-1 relative rounded-lg shadow-sm">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg class="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -94,20 +94,20 @@
                        id="q" 
                        value="{{ request.GET.q }}"
                        placeholder="Search memos..."
-                       class="block w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                       class="block w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 border-2 border-gray-300 rounded-lg text-base sm:text-lg focus:ring-blue-500 focus:border-blue-500">
               </div>
             </div>
             <div class="space-y-1">
-              <label for="date" class="block text-lg font-medium text-gray-700">Filter by Date</label>
+              <label for="date" class="block text-base sm:text-lg font-medium text-gray-700">Filter by Date</label>
               <input type="date" 
                      name="date" 
                      id="date" 
                      value="{{ request.GET.date }}" 
-                     class="mt-1 block w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:ring-blue-500 focus:border-blue-500">
+                     class="mt-1 block w-full rounded-lg border-2 border-gray-300 px-3 sm:px-4 py-2 sm:py-3 text-base sm:text-lg focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="col-span-2">
-              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-medium transition duration-150 flex items-center justify-center">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-medium transition duration-150 flex items-center justify-center">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 Search
@@ -117,28 +117,28 @@
         </div>
 
         <!-- View Toggle -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <div class="flex items-center justify-between">
-            <h3 class="text-2xl font-semibold text-gray-800 flex items-center">
-              <svg class="w-7 h-7 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 flex items-center">
+              <svg class="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
               View Options
             </h3>
-            <div class="flex space-x-2">
-              <button type="button" id="listViewBtn" class="view-toggle-btn px-4 py-2 text-lg font-medium rounded-lg bg-blue-600 text-white">
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="listViewBtn" class="view-toggle-btn px-3 sm:px-4 py-2 text-base sm:text-lg font-medium rounded-lg bg-blue-600 text-white">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
                 List
               </button>
-              <button type="button" id="cardViewBtn" class="view-toggle-btn px-4 py-2 text-lg font-medium rounded-lg text-gray-700 hover:bg-gray-100">
+              <button type="button" id="cardViewBtn" class="view-toggle-btn px-3 sm:px-4 py-2 text-base sm:text-lg font-medium rounded-lg text-gray-700 hover:bg-gray-100">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2zm0 8a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2z" />
                 </svg>
                 Cards
               </button>
-              <button type="button" id="calendarViewBtn" class="view-toggle-btn px-4 py-2 text-lg font-medium rounded-lg text-gray-700 hover:bg-gray-100">
+              <button type="button" id="calendarViewBtn" class="view-toggle-btn px-3 sm:px-4 py-2 text-base sm:text-lg font-medium rounded-lg text-gray-700 hover:bg-gray-100">
                 <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -244,23 +244,23 @@
           </div>
         </div>
 
-        <!-- List View Container (Original Table) -->
+        <!-- List View Container -->
         <div id="listViewContainer">
           <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             <div class="overflow-x-auto">
               <table class="min-w-full divide-y divide-gray-200 memo-table">
                 <thead class="bg-gray-50">
                   <tr>
-                    <th class="px-6 py-4 text-left text-gray-500 tracking-wider">
+                    <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-gray-500 tracking-wider">
                       <button class="sort-btn flex items-center space-x-2 hover:text-gray-700 group" data-sort="title">
-                        <svg class="w-6 h-6 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <div class="flex flex-col items-start">
-                          <span class="text-lg font-semibold">Title</span>
-                          <span class="text-sm text-gray-400 font-normal sort-direction">A to Z</span>
+                          <span class="text-base sm:text-lg font-semibold">Title</span>
+                          <span class="text-xs sm:text-sm text-gray-400 font-normal sort-direction">A to Z</span>
                         </div>
-                        <svg class="w-5 h-5 sort-icon hidden ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 sort-icon hidden ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
                         </svg>
                       </button>
@@ -392,26 +392,26 @@
         </div>
 
         <!-- Pagination -->
-        <div class="mt-8 flex justify-center items-center space-x-4">
+        <div class="mt-6 sm:mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
           {% if page_obj.has_previous %}
           <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}"
-             class="inline-flex items-center px-6 py-3 border-2 border-gray-300 rounded-lg text-xl font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border-2 border-gray-300 rounded-lg text-base sm:text-xl font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
             Previous
           </a>
           {% endif %}
 
-          <span class="text-xl text-gray-700">
+          <span class="text-base sm:text-xl text-gray-700">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
           </span>
 
           {% if page_obj.has_next %}
           <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.date %}&date={{ request.GET.date }}{% endif %}"
-             class="inline-flex items-center px-6 py-3 border-2 border-gray-300 rounded-lg text-xl font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
+             class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border-2 border-gray-300 rounded-lg text-base sm:text-xl font-medium text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
             Next
-            <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
@@ -475,7 +475,7 @@
         </div>
 
         <!-- Acknowledgment Section -->
-        <div id="acknowledgmentSection" class="border-t-2 border-gray-200 pt-8 mt-8">
+        <div id="acknowledgmentSection" class="border-t-2 border-gray-200 pt-8 mt-8" {% if request.user.is_superuser %}style="display: none;"{% endif %}>
           <div id="notAcknowledged" class="hidden">
             <form id="acknowledgmentForm" class="space-y-6">
               <input type="hidden" id="memoId" name="memoId" value="">
@@ -592,89 +592,7 @@
           console.error('Modal elements not found');
           return;
         }
-
-        // Reset and show modal
-        detailsContent.innerHTML = `
-          <div class="space-y-8">
-            <!-- Meta Information -->
-            <div class="bg-gray-50 rounded-lg p-6 space-y-3">
-              <div class="flex items-center text-gray-700">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <p class="text-lg" id="memoDate">Loading...</p>
-              </div>
-              <div class="flex items-center text-gray-700" id="locationContainer">
-                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <p class="text-lg" id="memoLocation">Loading...</p>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div class="prose prose-lg max-w-none">
-              <h4 class="text-2xl font-semibold text-gray-900 mb-4">Description</h4>
-              <div id="memoDescription" class="text-lg text-gray-700 whitespace-pre-wrap leading-relaxed">Loading...</div>
-            </div>
-
-            <!-- File Attachment -->
-            <div id="memoFile" class="hidden">
-              <h4 class="text-2xl font-semibold text-gray-900 mb-4">Attachment</h4>
-              <a href="#" id="memoFileLink" class="inline-flex items-center px-6 py-3 border-2 border-gray-300 shadow-sm text-lg font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
-                <svg class="w-6 h-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download Attachment
-              </a>
-            </div>
-
-            <!-- Acknowledgment Section -->
-            <div id="acknowledgmentSection" class="border-t-2 border-gray-200 pt-8 mt-8">
-              <div id="notAcknowledged" class="hidden">
-                <form id="acknowledgmentForm" class="space-y-6">
-                  <input type="hidden" id="memoId" name="memoId" value="">
-                  <div class="flex items-start space-x-4">
-                    <div class="flex items-center h-6 mt-1">
-                      <input id="acknowledgmentCheckbox" type="checkbox" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer" required>
-                    </div>
-                    <div class="flex-1">
-                      <label for="acknowledgmentCheckbox" class="text-xl text-gray-900 font-medium">
-                        Acknowledgment
-                      </label>
-                      <p class="text-lg text-gray-600 mt-2 leading-relaxed">
-                        I confirm that I have read and understood the contents of this memo.
-                      </p>
-                    </div>
-                  </div>
-                  <button type="submit" class="w-full inline-flex justify-center items-center px-6 py-4 border-2 border-transparent text-xl font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors duration-150">
-                    <svg class="w-7 h-7 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Submit Acknowledgment
-                  </button>
-                </form>
-              </div>
-              <div id="alreadyAcknowledged" class="hidden">
-                <div class="bg-green-50 rounded-lg p-6">
-                  <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                      <svg class="h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div class="ml-4">
-                      <h3 class="text-xl font-medium text-green-800">Memo Acknowledged</h3>
-                      <div class="mt-2 text-lg text-green-700" id="acknowledgedDate"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
+        
         // Show modal
         detailsModal.classList.remove('hidden');
         
@@ -704,73 +622,90 @@
           return response.json();
         })
         .then(data => {
-          if (!data) {
-            throw new Error('No data received from server');
-          }
-
           // Update modal content
-          const elements = {
-            title: document.getElementById('memoTitle'),
-            date: document.getElementById('memoDate'),
-            location: document.getElementById('memoLocation'),
-            locationContainer: document.getElementById('locationContainer'),
-            description: document.getElementById('memoDescription'),
-            fileSection: document.getElementById('memoFile'),
-            fileLink: document.getElementById('memoFileLink'),
-          };
+          if (detailsContent) {
+            detailsContent.innerHTML = `
+              <div class="prose prose-lg max-w-none">
+                <h4 class="text-2xl font-semibold text-gray-900 mb-4">Description</h4>
+                <div id="memoDescription" class="text-lg text-gray-700 whitespace-pre-wrap leading-relaxed">${data.description}</div>
+              </div>
 
-          // Update title if element exists
-          if (elements.title) {
-            elements.title.textContent = data.title || 'Untitled Memo';
+              <!-- File Attachment -->
+              <div id="memoFile" class="hidden">
+                <h4 class="text-2xl font-semibold text-gray-900 mb-4">Attachment</h4>
+                <a href="#" id="memoFileLink" class="inline-flex items-center px-6 py-3 border-2 border-gray-300 shadow-sm text-lg font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                  <svg class="w-6 h-6 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Download Attachment
+                </a>
+              </div>
+
+              <!-- Acknowledgment Section -->
+              <div id="acknowledgmentSection" class="border-t-2 border-gray-200 pt-8 mt-8" {% if request.user.is_superuser %}style="display: none;"{% endif %}>
+                <div id="notAcknowledged" class="hidden">
+                  <form id="acknowledgmentForm" class="space-y-6">
+                    <input type="hidden" id="memoId" name="memoId" value="${memoId}">
+                    <div class="flex items-start space-x-4">
+                      <div class="flex items-center h-6 mt-1">
+                        <input id="acknowledgmentCheckbox" type="checkbox" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer" required>
+                      </div>
+                      <div class="flex-1">
+                        <label for="acknowledgmentCheckbox" class="text-xl text-gray-900 font-medium">
+                          Acknowledgment
+                        </label>
+                        <p class="text-lg text-gray-600 mt-2 leading-relaxed">
+                          I confirm that I have read and understood the contents of this memo.
+                        </p>
+                      </div>
+                    </div>
+                    <button type="submit" class="w-full inline-flex justify-center items-center px-6 py-4 border-2 border-transparent text-xl font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-colors duration-150">
+                      <svg class="w-7 h-7 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Submit Acknowledgment
+                    </button>
+                  </form>
+                </div>
+                <div id="alreadyAcknowledged" class="hidden">
+                  <div class="bg-green-50 rounded-lg p-6">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div class="ml-4">
+                        <h3 class="text-xl font-medium text-green-800">Memo Acknowledged</h3>
+                        <div class="mt-2 text-lg text-green-700" id="acknowledgedDate"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
           }
 
-          // Update date if element exists
-          if (elements.date) {
-            const date = new Date(data.when);
-            const options = { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric'
-            };
-            elements.date.textContent = date.toLocaleDateString('en-US', options);
+          // Update title
+          if (titleElement) {
+            titleElement.textContent = data.title;
           }
 
-          // Update location if elements exist
-          if (elements.location && elements.locationContainer) {
-            if (data.where) {
-              elements.location.textContent = `Location: ${data.where}`;
-              elements.locationContainer.classList.remove('hidden');
-            } else {
-              elements.locationContainer.classList.add('hidden');
-            }
-          }
-
-          // Update description if element exists
-          if (elements.description) {
-            elements.description.textContent = data.description || 'No description available';
-          }
-
-          // Update file attachment if elements exist
-          if (elements.fileSection && elements.fileLink) {
+          // Handle file attachment
+          const fileSection = document.getElementById('memoFile');
+          const fileLink = document.getElementById('memoFileLink');
+          if (fileSection && fileLink) {
             if (data.file_url) {
-              elements.fileSection.classList.remove('hidden');
-              elements.fileLink.href = data.file_url;
+              fileSection.classList.remove('hidden');
+              fileLink.href = data.file_url;
             } else {
-              elements.fileSection.classList.add('hidden');
+              fileSection.classList.add('hidden');
             }
           }
 
           // Handle acknowledgment section
           const acknowledgmentSection = document.getElementById('acknowledgmentSection');
-          if (acknowledgmentSection) {
-            const memoIdInput = document.getElementById('memoId');
-            if (memoIdInput) {
-              memoIdInput.value = memoId;
-            }
-
+          if (acknowledgmentSection && !document.body.classList.contains('is-superuser')) {
             fetch(`/memos/${memoId}/check-acknowledgment/`, {
               headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -846,9 +781,8 @@
     });
 
     // Handle acknowledgment form submission
-    const acknowledgmentForm = document.getElementById('acknowledgmentForm');
-    if (acknowledgmentForm) {
-      acknowledgmentForm.addEventListener('submit', function(e) {
+    document.addEventListener('submit', function(e) {
+      if (e.target && e.target.id === 'acknowledgmentForm') {
         e.preventDefault();
         const memoId = document.getElementById('memoId').value;
         const checkbox = document.getElementById('acknowledgmentCheckbox');
@@ -858,27 +792,53 @@
           return;
         }
 
+        // Show loading state
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        const originalButtonContent = submitButton.innerHTML;
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+          <svg class="animate-spin h-7 w-7 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Submitting...
+        `;
+
         fetch(`/memos/mark-read/${memoId}/`, {
           method: 'POST',
           headers: {
             'X-CSRFToken': getCookie('csrftoken'),
             'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
           },
+          credentials: 'same-origin'
         })
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
         .then(data => {
           if (data.success) {
+            // Update UI to show acknowledgment
             document.getElementById('notAcknowledged').classList.add('hidden');
             document.getElementById('alreadyAcknowledged').classList.remove('hidden');
             document.getElementById('acknowledgedDate').textContent = `Acknowledged on ${data.acknowledged_date}`;
+          } else {
+            throw new Error('Server returned unsuccessful response');
           }
         })
         .catch(error => {
           console.error('Error submitting acknowledgment:', error);
+          // Restore button state
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalButtonContent;
+          // Show error message
           alert('Error submitting acknowledgment. Please try again.');
         });
-      });
-    }
+      }
+    });
 
     // Utility function to get CSRF token
     function getCookie(name) {
@@ -2052,6 +2012,75 @@
   min-height: calc(100vh - 400px);
 }
 
+@media (max-width: 768px) {
+  #monthGrid {
+    min-height: calc(100vh - 300px);
+  }
+  
+  .month-day-cell {
+    min-height: 120px;
+    padding: 0.5rem;
+  }
+  
+  .month-day-cell .date-number {
+    font-size: 0.875rem;
+    top: 0.25rem;
+    right: 0.5rem;
+  }
+  
+  .month-day-cell .event-container {
+    margin-top: 1.5rem;
+  }
+  
+  .calendar-event {
+    padding: 4px 8px;
+    margin: 1px 2px;
+    font-size: 0.75rem;
+  }
+  
+  /* Week/Day View Mobile Adjustments */
+  #weekView, #dayView {
+    height: calc(100vh - 250px);
+  }
+  
+  .time-slot {
+    height: 40px;
+  }
+  
+  .time-label {
+    font-size: 0.7rem;
+    top: -8px;
+  }
+  
+  /* Calendar Header Mobile Adjustments */
+  .calendar-toolbar {
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .calendar-navigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .calendar-view-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .calendar-view-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Calendar Container Mobile Adjustments */
+  .calendar-container {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+}
+
 /* Month View Day Cell */
 .month-day-cell {
   background-color: white;
@@ -2458,6 +2487,56 @@ document.querySelectorAll('.calendar-view-btn').forEach(btn => {
       </div>
       {% endfor %}
     {% endif %}
+  </div>
+</div>
+
+<!-- Memo Detail Modal -->
+<div id="memoDetailModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+      <div class="bg-white px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-6">
+        <div class="sm:flex sm:items-start">
+          <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+            <h3 class="text-lg sm:text-2xl font-medium leading-6 text-gray-900 mb-4" id="modal-title">
+              Memo Details
+            </h3>
+            <div class="mt-2 space-y-4">
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">Title</h4>
+                <p class="mt-1 text-sm sm:text-base text-gray-600" id="modalTitle"></p>
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">Description</h4>
+                <p class="mt-1 text-sm sm:text-base text-gray-600" id="modalDescription"></p>
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">Date</h4>
+                <p class="mt-1 text-sm sm:text-base text-gray-600" id="modalDate"></p>
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">Location</h4>
+                <p class="mt-1 text-sm sm:text-base text-gray-600" id="modalLocation"></p>
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">File</h4>
+                <p class="mt-1 text-sm sm:text-base text-gray-600" id="modalFile"></p>
+              </div>
+              <div>
+                <h4 class="text-base sm:text-lg font-medium text-gray-900">Readers</h4>
+                <div class="mt-1 text-sm sm:text-base text-gray-600" id="modalReaders"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 sm:flex sm:flex-row-reverse">
+        <button type="button" class="w-full sm:w-auto mt-3 sm:mt-0 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 sm:px-6 py-2 sm:py-3 bg-white text-base sm:text-lg font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="closeMemoDetailModal()">
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

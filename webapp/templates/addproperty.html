@@ -5,13 +5,17 @@
 {% block title %}Manage Projects{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto mt-8 px-4">
-    <div class="bg-white shadow-lg rounded-2xl p-6">
-        <h2 class="text-xl font-bold mb-4 text-gray-800">Add New Subdivision</h2>
+<div class="container mx-auto mt-6 px-4 max-w-6xl">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Enhanced Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5">
+            <h2 class="text-2xl font-bold text-white">Add New Subdivision</h2>
+            <p class="text-indigo-100 text-sm mt-1">Create a new property listing</p>
+        </div>
 
         <!-- Display success or error messages -->
         {% if messages %}
-            <div class="mb-4">
+            <div class="px-6 pt-4">
                 {% for message in messages %}
                     <div class="{% if message.tags == 'success' %}bg-green-50 text-green-600{% else %}bg-red-50 text-red-600{% endif %} p-3 rounded-lg text-base">
                         <p>{{ message }}</p>
@@ -20,264 +24,204 @@
             </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" id="subdivision-form" class="space-y-4">
+        <form method="post" enctype="multipart/form-data" id="subdivision-form" class="p-6">
             {% csrf_token %}
             
-            <!-- City with Add New City Button -->
-            <div>
-                <div class="flex justify-between items-center mb-1">
-                    <label class="block text-base font-medium text-gray-700">City</label>
-                    <button type="button" id="show-city-modal" class="text-blue-600 hover:text-blue-800 text-base font-medium hover:underline">
-                        + Add New City
-                    </button>
-                </div>
-                <div class="flex gap-2">
-                    {{ form.city|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                </div>
-                {% if form.city.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in form.city.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Name -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Subdivision Name</label>
-                    {{ form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.name.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.name.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Commission Field -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Commission (%)</label>
-                    {{ form.commission|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.commission.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.commission.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Developer and Construction Status -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Developer -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Developer</label>
-                    {{ form.developer|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.developer.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.developer.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Construction Status -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Construction Status</label>
-                    {{ form.construction_status|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.construction_status.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.construction_status.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        
-            <!-- Description -->
-            <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">Description</label>
-                {{ form.description|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                {% if form.description.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in form.description.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Location -->
-            <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">Location Details</label>
-                {{ form.location|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                {% if form.location.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in form.location.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- House Model -->
-            <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">House Model</label>
-                {{ form.house_model|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                {% if form.house_model.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in form.house_model.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Prices -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Minimum Price (₱)</label>
-                    {{ form.price_min|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.price_min.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.price_min.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Maximum Price (₱)</label>
-                    {{ form.price_max|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.price_max.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.price_max.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Links -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Messenger Link -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Messenger Link <span class="text-gray-500">(Optional)</span></label>
-                    {{ form.messenger_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.messenger_link.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.messenger_link.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Google Drive Link -->
-                <div>
-                    <label class="block text-base font-medium text-gray-700 mb-1">Google Drive Link <span class="text-gray-500">(Optional)</span></label>
-                    {{ form.google_drive_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                    {% if form.google_drive_link.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {% for error in form.google_drive_link.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Priority -->
-            <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">Priority</label>
-                {{ form.priority|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
-                {% if form.priority.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in form.priority.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-
-            <!-- Images Section -->
-            <div class="space-y-4">
-                <h3 class="text-lg font-medium text-gray-800">Property Images</h3>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Image 1 -->
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 1 <span class="text-gray-500">(Optional)</span></label>
-                        {{ form.image1 }}
-                        {% if form.image1.errors %}
-                            <div class="text-red-500 text-sm mt-1">
-                                {% for error in form.image1.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <!-- Basic Info Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Basic Information
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- City with Add New City Button -->
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="block text-sm font-medium text-gray-700">City *</label>
+                                    <button type="button" id="show-city-modal" class="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline">
+                                        + Add New City
+                                    </button>
+                                </div>
+                                {{ form.city|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.city.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.city.errors.0 }}</p>
+                                {% endif %}
                             </div>
-                        {% endif %}
+
+                            <div>
+                                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Subdivision Name *</label>
+                                {{ form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.name.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.name.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description *</label>
+                                {{ form.description|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.description.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.description.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Image 2 -->
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 2 <span class="text-gray-500">(Optional)</span></label>
-                        {{ form.image2 }}
-                        {% if form.image2.errors %}
-                            <div class="text-red-500 text-sm mt-1">
-                                {% for error in form.image2.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
+                    <!-- Pricing Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Pricing Details
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="{{ form.price_min.id_for_label }}" class="block text-sm font-medium text-gray-700">Minimum Price (₱) *</label>
+                                {{ form.price_min|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.price_min.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.price_min.errors.0 }}</p>
+                                {% endif %}
                             </div>
-                        {% endif %}
+                            
+                            <div>
+                                <label for="{{ form.price_max.id_for_label }}" class="block text-sm font-medium text-gray-700">Maximum Price (₱) *</label>
+                                {{ form.price_max|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.price_max.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.price_max.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div>
+                                <label for="{{ form.commission.id_for_label }}" class="block text-sm font-medium text-gray-700">Commission (%) *</label>
+                                {{ form.commission|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.commission.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.commission.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.priority.id_for_label }}" class="block text-sm font-medium text-gray-700">Priority *</label>
+                                {{ form.priority|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.priority.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.priority.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Additional Info Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Additional Details
+                        </h3>
+                        <div class="space-y-4">
+                            <!-- Location -->
+                            <div>
+                                <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700">Location Details</label>
+                                {{ form.location|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.location.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.location.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- House Model -->
+                            <div id="house-model-wrapper">
+                                <label for="{{ form.house_model.id_for_label }}" class="block text-sm font-medium text-gray-700">House Model</label>
+                                {{ form.house_model|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.house_model.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.house_model.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Developer -->
+                            <div>
+                                <label for="{{ form.developer.id_for_label }}" class="block text-sm font-medium text-gray-700">Developer</label>
+                                {{ form.developer|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.developer.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.developer.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Construction Status -->
+                            <div>
+                                <label for="{{ form.construction_status.id_for_label }}" class="block text-sm font-medium text-gray-700">Construction Status</label>
+                                {{ form.construction_status|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.construction_status.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.construction_status.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+
+                            <!-- Messenger Link -->
+                            <div>
+                                <label for="{{ form.messenger_link.id_for_label }}" class="block text-sm font-medium text-gray-700">Messenger Link <span class="text-gray-500">(Optional)</span></label>
+                                {{ form.messenger_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.messenger_link.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.messenger_link.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Google Drive Link -->
+                            <div>
+                                <label for="{{ form.google_drive_link.id_for_label }}" class="block text-sm font-medium text-gray-700">Google Drive Link <span class="text-gray-500">(Optional)</span></label>
+                                {{ form.google_drive_link|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                {% if form.google_drive_link.errors %}
+                                    <p class="text-red-500 text-xs mt-1">{{ form.google_drive_link.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Image 3 -->
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 3 <span class="text-gray-500">(Optional)</span></label>
-                        {{ form.image3 }}
-                        {% if form.image3.errors %}
-                            <div class="text-red-500 text-sm mt-1">
-                                {% for error in form.image3.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <!-- Image 4 -->
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Image 4 <span class="text-gray-500">(Optional)</span></label>
-                        {{ form.image4 }}
-                        {% if form.image4.errors %}
-                            <div class="text-red-500 text-sm mt-1">
-                                {% for error in form.image4.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                    <!-- Image Upload Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                            Property Images
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            {% for field in form %}
+                                {% if 'image' in field.name %}
+                                    <div>
+                                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                                            {{ field.label }} <span class="text-gray-500">(Optional)</span>
+                                        </label>
+                                        {{ field|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
+                                        {% if field.errors %}
+                                            <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Non-field errors -->
-            {% if form.non_field_errors %}
-                <div class="bg-red-50 text-red-600 p-3 rounded-lg text-base">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        
-            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl text-base font-medium transition duration-200">
-                Add Subdivision
-            </button>
+            <!-- Action Buttons -->
+            <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-4">
+                <a href="#" class="px-6 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-500">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2.5 text-base font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Add Subdivision
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -300,31 +244,23 @@
             <!-- Province Selection with Add New Button -->
             <div>
                 <div class="flex justify-between items-center mb-1">
-                    <label class="block text-base font-medium text-gray-700">Province</label>
-                    <button type="button" id="show-province-modal" class="text-blue-600 hover:text-blue-800 text-base font-medium hover:underline">
+                    <label class="block text-sm font-medium text-gray-700">Province</label>
+                    <button type="button" id="show-province-modal" class="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline">
                         + Add New Province
                     </button>
                 </div>
                 {{ city_form.province|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
                 {% if city_form.province.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in city_form.province.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
+                    <p class="text-red-500 text-xs mt-1">{{ city_form.province.errors.0 }}</p>
                 {% endif %}
             </div>
 
             <!-- City Name -->
             <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">City Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">City Name</label>
                 {{ city_form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
                 {% if city_form.name.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in city_form.name.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
+                    <p class="text-red-500 text-xs mt-1">{{ city_form.name.errors.0 }}</p>
                 {% endif %}
             </div>
 
@@ -358,14 +294,10 @@
             
             <!-- Province Name -->
             <div>
-                <label class="block text-base font-medium text-gray-700 mb-1">Province Name</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Province Name</label>
                 {{ province_form.name|add_class:"border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-200 w-full rounded-lg px-3 py-2 text-base" }}
                 {% if province_form.name.errors %}
-                    <div class="text-red-500 text-sm mt-1">
-                        {% for error in province_form.name.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
+                    <p class="text-red-500 text-xs mt-1">{{ province_form.name.errors.0 }}</p>
                 {% endif %}
             </div>
 

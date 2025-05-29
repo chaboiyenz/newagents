@@ -3,17 +3,17 @@
 {% block title %}View Properties{% endblock %}
 
 {% block content %}
-<div class="bg-gray-100 h-[calc(100vh-4rem)] overflow-auto py-8">
-  <div class="container mx-auto px-8 max-w-[95%]">
+<div class="bg-gray-100 min-h-[calc(100vh-4rem)] overflow-auto py-4 sm:py-8">
+  <div class="container mx-auto px-4 sm:px-8 max-w-[95%]">
     <!-- Search and Filter Section -->
-    <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+    <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 mb-4 sm:mb-8">
       <form method="get">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="col-span-1 md:col-span-2">
-            <label for="search" class="block text-lg font-semibold text-gray-800 mb-3">Search</label>
+        <div class="grid grid-cols-1 gap-4 sm:gap-8">
+          <div>
+            <label for="search" class="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">Search</label>
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="h-6 w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                 </svg>
               </div>
@@ -21,18 +21,18 @@
                 type="text" 
                 name="q" 
                 id="search" 
-                placeholder="Search by province, city or subdivision..." 
+                placeholder="Search by developer, province, city or subdivision..." 
                 value="{{ query }}"
-                class="pl-12 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg py-4"
+                class="pl-10 sm:pl-12 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg py-3 sm:py-4"
               />
             </div>
           </div>
           <div>
-            <label for="price" class="block text-lg font-semibold text-gray-800 mb-3">Price Range</label>
+            <label for="price" class="block text-base sm:text-lg font-semibold text-gray-800 mb-2 sm:mb-3">Price Range</label>
             <select 
               name="price" 
               id="price" 
-              class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-lg py-4"
+              class="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-base sm:text-lg py-3 sm:py-4"
             >
               <option value="">All Price Ranges</option>
               <option value="range1" {% if price == 'range1' %}selected{% endif %}>Below ₱500,000</option>
@@ -44,9 +44,9 @@
             </select>
           </div>
         </div>
-        <div class="mt-6 flex justify-end">
-          <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
-            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <div class="mt-4 sm:mt-6 flex justify-end">
+          <button type="submit" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-base sm:text-lg font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+            <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
             </svg>
             Search
@@ -56,12 +56,12 @@
     </div>
     
     <!-- Results Count & New Property Button -->
-    <div class="flex justify-between items-center mb-4">
-      <div class="text-gray-600 text-lg">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-4">
+      <div class="text-gray-600 text-base sm:text-lg">
         <span class="font-medium">{{ subdivisions|length }}</span> properties found
       </div>
-      <a href="{% url 'addproperty' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition">
-        <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <a href="{% url 'addproperty' %}" class="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-base sm:text-lg font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition">
+        <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
         </svg>
         Add Property
@@ -72,23 +72,46 @@
     <div class="bg-white overflow-hidden shadow-lg rounded-xl">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr class="bg-gray-50">
-              <th scope="col" class="px-6 py-4 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider">Project Name</th>
-              <th scope="col" class="px-6 py-4 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider">Province</th>
-              <th scope="col" class="px-6 py-4 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider">City</th>
-              <th scope="col" class="px-6 py-4 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider">Price</th>
-              <th scope="col" class="px-6 py-4 text-left text-lg font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">Developer</th>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">Project Name</th>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">Province</th>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">City</th>
+              <th scope="col" class="px-4 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-lg font-semibold text-gray-600 uppercase tracking-wider">Price</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             {% for s in subdivisions %}
             <tr class="hover:bg-gray-50 transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">{{ s.name }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">{{ s.city.province.name }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">{{ s.city.name }}</td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium 
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:space-x-3">
+                  <a href="{% url 'editproperty' s.pk %}" class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                    <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                    Edit
+                  </a>
+                  <button 
+                    type="button"
+                    data-id="{{ s.id }}"
+                    data-name="{{ s.name }}"
+                    class="w-full sm:w-auto open-delete-modal inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 border border-transparent text-sm sm:text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
+                  >
+                    <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500">{{ s.developer|default:"N/A" }}</td>
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg font-medium text-gray-900">{{ s.name }}</td>
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500">{{ s.city.province.name }}</td>
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm sm:text-lg text-gray-500">{{ s.city.name }}</td>
+              <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2 sm:px-4 py-1 sm:py-2 rounded-full text-sm sm:text-lg font-medium 
                   {% if s.price_min < 500000 %}
                     bg-green-100 text-green-800
                   {% elif s.price_min < 1000000 %}
@@ -110,42 +133,21 @@
                   {% endif %}
                 </span>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-lg font-medium">
-                <div class="flex items-center space-x-3">
-                  <a href="{% url 'editproperty' s.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
-                    <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
-                    Edit
-                  </a>
-                  <button 
-                    type="button"
-                    data-id="{{ s.id }}"
-                    data-name="{{ s.name }}"
-                    class="open-delete-modal inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
-                  >
-                    <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                    Delete
-                  </button>
-                </div>
-              </td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="5" class="px-8 py-12 text-center">
+              <td colspan="6" class="px-4 sm:px-8 py-8 sm:py-12 text-center">
                 <div class="flex flex-col items-center">
-                  <svg class="h-16 w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 class="mt-4 text-xl font-medium text-gray-900">No properties found</h3>
-                  <p class="mt-2 text-lg text-gray-500">
+                  <h3 class="mt-3 sm:mt-4 text-lg sm:text-xl font-medium text-gray-900">No properties found</h3>
+                  <p class="mt-1 sm:mt-2 text-base sm:text-lg text-gray-500">
                     Try adjusting your search criteria or add a new property.
                   </p>
-                  <div class="mt-6">
-                    <a href="{% url 'addproperty' %}" class="inline-flex items-center px-6 py-3 border border-transparent text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <div class="mt-4 sm:mt-6">
+                    <a href="{% url 'addproperty' %}" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 border border-transparent text-base sm:text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <svg class="h-4 w-4 sm:h-5 sm:w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                       </svg>
                       Add Property
@@ -161,7 +163,7 @@
     </div>
 
     <!-- Pagination (if needed) -->
-    <div class="mt-6 flex justify-center">
+    <div class="mt-4 sm:mt-6 flex justify-center">
       <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
         <!-- Add pagination controls here if needed -->
       </nav>
@@ -171,37 +173,37 @@
 
 <!-- Delete Confirmation Modal -->
 <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
-  <div class="bg-white rounded-lg shadow-md max-w-md w-full transform transition-all">
+  <div class="bg-white rounded-lg shadow-md max-w-[90%] sm:max-w-md w-full transform transition-all mx-4">
     <div class="p-4">
       <div class="flex items-start justify-between">
         <div class="flex items-center">
           <div class="flex-shrink-0 bg-red-100 rounded-full p-2">
-            <svg class="h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-4 w-4 sm:h-5 sm:w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <div class="ml-3">
-            <h3 class="text-lg font-medium text-gray-900">Delete Property</h3>
+            <h3 class="text-base sm:text-lg font-medium text-gray-900">Delete Property</h3>
           </div>
         </div>
         <button id="closeModal" class="text-gray-400 hover:text-gray-500">
-          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-4 w-4 sm:h-5 sm:w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
       <div class="mt-3">
-        <p class="text-sm text-gray-500">
+        <p class="text-sm sm:text-base text-gray-500">
           Are you sure you want to delete <span id="modalItemName" class="font-bold"></span>? This action cannot be undone.
         </p>
       </div>
-      <div class="mt-4 flex justify-end space-x-3">
-        <button id="cancelDelete" class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      <div class="mt-4 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+        <button id="cancelDelete" class="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-3 py-2 text-sm sm:text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           Cancel
         </button>
-        <form method="post" id="deleteForm">
+        <form method="post" id="deleteForm" class="w-full sm:w-auto">
           {% csrf_token %}
-          <button type="submit" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-1.5 bg-red-600 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+          <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 py-2 text-sm sm:text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
             Yes, Delete
           </button>
         </form>
@@ -229,7 +231,7 @@
         if (data.subdivisions.length === 0) {
           tbody.innerHTML = `
             <tr>
-              <td colspan="5" class="px-8 py-12 text-center">
+              <td colspan="6" class="px-8 py-12 text-center">
                 <div class="flex flex-col items-center">
                   <svg class="h-16 w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -253,17 +255,9 @@
         } else {
           tbody.innerHTML = data.subdivisions.map(s => `
             <tr class="hover:bg-gray-50 transition-colors">
-              <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">${s.name}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">${s.province}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">${s.city}</td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium ${s.price_class}">
-                  ₱${s.price_min.toLocaleString()} - ₱${s.price_max.toLocaleString()}
-                </span>
-              </td>
               <td class="px-6 py-4 whitespace-nowrap text-lg font-medium">
                 <div class="flex items-center space-x-3">
-                  <a href="/viewproperties/edit/${s.id}/" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                  <a href="/viewproperties/edit/${s.id}/" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
                     <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
@@ -273,7 +267,7 @@
                     type="button"
                     data-id="${s.id}"
                     data-name="${s.name}"
-                    class="open-delete-modal inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
+                    class="open-delete-modal inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition"
                   >
                     <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -281,6 +275,15 @@
                     Delete
                   </button>
                 </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">${s.developer === null || s.developer === undefined || s.developer === '' ? 'N/A' : s.developer}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">${s.name}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">${s.province}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500">${s.city}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-4 py-2 rounded-full text-lg font-medium ${s.price_class}">
+                  ₱${s.price_min.toLocaleString()} - ₱${s.price_max.toLocaleString()}
+                </span>
               </td>
             </tr>
           `).join('');

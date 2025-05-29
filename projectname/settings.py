@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+import dj_database_url
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -15,7 +17,7 @@ SECRET_KEY = 'django-insecure-l5ziziv7tuse&^*u1qkg3jt1gmo*@pj=nup98axh4rw!-0p1^6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['chaboiyenz.onrender.com']
 
 
 # Application definition
@@ -66,11 +68,9 @@ WSGI_APPLICATION = 'projectname.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default='postgres://localhost', conn_max_age=600)
 }
+
 
 
 # Password validation
@@ -110,6 +110,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -120,13 +124,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Authentication settings
 LOGIN_URL = 'agentsignin'  # Redirect unauthenticated users to agentsignin page
 
+# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST ='smtp.gmail.com'           
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'marvey.gervacio@gmail.com'   
-EMAIL_HOST_PASSWORD='noah qjyz chbh dqhe'
-DEFAULT_FROM_EMAIL = 'Inner SPARC Realty <noreply@example.com>'
+EMAIL_HOST_USER = 'marvey.gervacio@gmail.com'
+EMAIL_HOST_PASSWORD = 'noah qjyz chbh dqhe'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = 10  # Timeout in seconds for email operations
+
+# Add error handling for email
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 ADMINS = [
     ('Site Admin', 'teo.innersparc@gmail.com'),  # Replace with your real admin name and email

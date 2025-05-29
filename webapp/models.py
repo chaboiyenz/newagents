@@ -33,9 +33,12 @@ class Subdivision(models.Model):
     CONSTRUCTION_STATUS_CHOICES = [
         ('RFO', 'Ready For Occupancy'),
         ('Preselling', 'Preselling'),
+        ('RFO/Preselling', 'RFO/Preselling'),
+        ('OGC', 'On Going Construction'),
+        ('RFO/Preselling/OGC', 'RFO/Preselling/OGC'),
     ]
     construction_status = models.CharField(
-        max_length=10,
+        max_length=20,
         choices=CONSTRUCTION_STATUS_CHOICES,
         blank=True,
         null=True
@@ -86,6 +89,8 @@ class Project(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
+    reset_token = models.CharField(max_length=100, blank=True, null=True)
+    reset_token_created = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username
